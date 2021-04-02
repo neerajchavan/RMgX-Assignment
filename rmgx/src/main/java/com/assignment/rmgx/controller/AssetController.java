@@ -41,7 +41,7 @@ public class AssetController {
 		return assetService.addAsset(asset);
 	}
 
-	@PostMapping("/assign-asset")
+	@PutMapping("/assign-asset")
 	@ApiOperation(value = "Assign Asset to Employee", response = AssetDTO.class)
 	public AssetDTO assignAsset(
 			@ApiParam(value = "Requires id & assignedTo attributes of Asset Object. (assignedTo = ID of the Employee to which you want to assign the Asset). No need to set other properties", required = true) @RequestBody AssetDTO asset) {

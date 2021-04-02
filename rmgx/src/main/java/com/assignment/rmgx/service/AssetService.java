@@ -112,8 +112,10 @@ public class AssetService {
 				.orElseThrow(() -> new ResourceNotFoundException("Cannot Find Asset With ID : " + assetId));
 
 		if (asset.getStatus().equalsIgnoreCase("Assigned")) {
-
+			
+			if(assetDTO.getCondition() != null)
 			asset.setCondition(assetDTO.getCondition());
+			
 			asset.setStatus("Recovered");
 			asset.setEmployee(null);
 			asset = assetRepository.save(asset);
