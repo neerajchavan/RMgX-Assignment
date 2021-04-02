@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.assignment.rmgx.model.AssetCategory;
 import com.assignment.rmgx.service.AssetCategoryService;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 @RestController
 public class AssetCategoryController {
 	
@@ -26,26 +29,45 @@ public class AssetCategoryController {
     Logger logger = LoggerFactory.getLogger(AssetController.class);
 	
 	@GetMapping("/asset-category")
+	@ApiOperation(
+			value = "Get Asset Category List",
+			response = AssetCategory.class
+	)
 	public List<AssetCategory> getAllAssetCategory() {
 		return assetCategoryService.getCategories();
 	}
 	
 	@GetMapping("/asset-category/{id}")
+	@ApiOperation(
+			value = "Get Asset Category By ID",
+			notes = "Provide an ID to get specific Asset Category",
+			response = AssetCategory.class
+	)
 	public AssetCategory getAssetCategory(@PathVariable Long id) {
 		return assetCategoryService.getCategoryById(id);
 	}
 	
+	
 	@PostMapping("/asset-category")
-	public ResponseEntity<AssetCategory> addAssetCategory(@RequestBody AssetCategory ac){
-		AssetCategory assetCategory = assetCategoryService.addCategory(ac);
+	@ApiOperation(
+			value = "Add Asset Category",
+			response = AssetCategory.class
+	)
+	public ResponseEntity<AssetCategory> addAssetCategory(@ApiParam(value = "No need to include ID in body", required = true) @RequestBody AssetCategory assetCategory){
+		AssetCategory ac = assetCategoryService.addCategory(assetCategory);
 		
-		return new ResponseEntity<AssetCategory>(assetCategory, HttpStatus.CREATED);
+		return new ResponseEntity<AssetCategory>(ac, HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/asset-category/{id}")
-	public ResponseEntity<AssetCategory> updateAssetCategory(@RequestBody AssetCategory ac, @PathVariable Long id){
-		AssetCategory assetCategory = assetCategoryService.updateCategory(ac, id);
-		return new ResponseEntity<AssetCategory>(assetCategory, HttpStatus.OK);
+	@ApiOperation(
+			value = "Update Asset Category",
+			notes = "Provide an ID  Asset-Category",
+			response = AssetCategory.class
+	)
+	public ResponseEntity<AssetCategory> updateAssetCategory(@RequestBody AssetCategory assetCategory, @ApiParam(value = "ID value of an Asset Category that you want to update", required = true) @PathVariable Long id){
+		AssetCategory ac = assetCategoryService.updateCategory(assetCategory, id);
+		return new ResponseEntity<AssetCategory>(ac, HttpStatus.OK);
 	}
 
 }

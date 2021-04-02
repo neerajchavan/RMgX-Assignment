@@ -8,9 +8,9 @@ import javax.persistence.Id;
 
 @Entity
 public class AssetCategory {
-	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "category_id")
 	private Long id;
 	
@@ -42,6 +42,18 @@ public class AssetCategory {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public AssetCategory(Long id, String name, String description) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.description = description;
+	}
+
+	public AssetCategory() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 	
 }

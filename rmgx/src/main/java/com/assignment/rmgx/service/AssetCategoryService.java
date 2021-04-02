@@ -12,28 +12,32 @@ import com.assignment.rmgx.repository.AssetCategoryRepository;
 @Service
 public class AssetCategoryService {
 
+	private AssetCategoryRepository acRepository;
+
 	@Autowired
-	private AssetCategoryRepository assetCategoryRepository;
+	public AssetCategoryService(AssetCategoryRepository acRepository) {
+		this.acRepository = acRepository;
+	}
 
 	public List<AssetCategory> getCategories() {
-		return assetCategoryRepository.findAll();
+		return acRepository.findAll();
 	}
 
 	public AssetCategory getCategoryById(Long id) {
-		AssetCategory assetCategory = assetCategoryRepository.findById(id)
+		AssetCategory assetCategory = acRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Asset Category Not Found With ID : "+id));
 
 		return assetCategory;
 	}
 
 	public AssetCategory getCategoryByName(String name) {
-		AssetCategory assetCategory = assetCategoryRepository.findByName(name)
+		AssetCategory assetCategory = acRepository.findByName(name)
 				.orElseThrow(() -> new ResourceNotFoundException("Asset Category Not Found With Name : " + name));
 		return assetCategory;
 	}
 
 	public AssetCategory addCategory(AssetCategory ac) {
-		return assetCategoryRepository.save(ac);
+		return acRepository.save(ac);
 	}
 
 	public AssetCategory updateCategory(AssetCategory ac, Long id) {
@@ -41,7 +45,7 @@ public class AssetCategoryService {
 		assetCategory.setName(ac.getName());
 		assetCategory.setDescription(ac.getDescription());
 
-		return assetCategoryRepository.save(assetCategory);
+		return acRepository.save(assetCategory);
 	}
 
 }

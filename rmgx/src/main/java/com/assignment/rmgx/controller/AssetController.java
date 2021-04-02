@@ -19,49 +19,63 @@ import com.assignment.rmgx.model.AssetCategory;
 import com.assignment.rmgx.model.Employee;
 import com.assignment.rmgx.service.AssetService;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 @RestController
 public class AssetController {
-	
+
 	@Autowired
 	private AssetService assetService;
-	
-    Logger logger = LoggerFactory.getLogger(AssetController.class);
 
-	
 	@GetMapping("/assets")
+	@ApiOperation(value = "Get All Assets", response = AssetDTO.class)
 	public List<AssetDTO> getAsset() {
 		return assetService.getAllAssets();
 	}
-	
+
+	@PostMapping("/assets")
+	@ApiOperation(value = "Add Asset", response = AssetDTO.class)
+	public AssetDTO addAsset(
+			@ApiParam(value = "No need to include ID in body", required = true) @RequestBody AssetDTO asset) {
+		return assetService.addAsset(asset);
+	}
+
+	@PostMapping("/assign-asset")
+	@ApiOperation(value = "Assign Asset to Employee", response = AssetDTO.class)
+	public AssetDTO assignAsset(
+			@ApiParam(value = "Requires id & assignedTo attributes of Asset Object. (assignedTo = ID of the Employee to which you want to assign the Asset). No need to set other properties", required = true) @RequestBody AssetDTO asset) {
+		return assetService.assignAsset(asset);
+	}
+
+	@PutMapping("/recover-asset/{assetId}")
+	@ApiOperation(value = "Recover Asset from Employee", response = AssetDTO.class)
+	public AssetDTO recoverAsset(
+			@ApiParam(value = "Requires Asset ID which you want to recover. Asset body is required to update condition of Asset. Please set 'condition' attribute of Asset. No need to set other attributes.") @RequestBody AssetDTO asset,
+			@PathVariable Long assetId) {
+		return assetService.recoverAsset(asset, assetId);
+	}
+
+	@PutMapping("/assets/{id}")
+	@ApiOperation(value = "Update Asset", response = AssetDTO.class)
+	public AssetDTO updateAsset(@ApiParam(value = "Requires Asset Body & Asset ID") @RequestBody AssetDTO asset,
+			@PathVariable Long id) {
+		AssetDTO updatedAsset = assetService.updateAsset(asset, id);
+		return updatedAsset;
+	}
+
 	@GetMapping("/assets/{name}")
-	public AssetDTO getAssetByName(@PathVariable String name) {
+	@ApiOperation(value = "Search Asset By Name", response = AssetDTO.class)
+	public AssetDTO getAssetByName(
+			@ApiParam(value = "Search operation is case sensitive. Please mention exact asset name") @PathVariable String name) {
 		return assetService.getAssetByName(name);
 	}
-	
-	@PostMapping("/assets")
-	public AssetDTO addAsset(@RequestBody AssetDTO assetDTO) {
-		return assetService.addAsset(assetDTO);
-	}
-	
-	@PostMapping("/assign-asset")
-	public AssetDTO assignAsset(@RequestBody AssetDTO assetDTO) {
-		return assetService.assignAsset(assetDTO);
-	}
-	
-	@PutMapping("/recover-asset/{assetId}")
-	public AssetDTO recoverAsset(@RequestBody AssetDTO assetDTO,@PathVariable Long assetId) {
-		return assetService.recoverAsset(assetDTO, assetId);
-	}
-	
-	@PutMapping("/assets/{id}")
-	public AssetDTO updateAsset(@RequestBody AssetDTO assetDTO, @PathVariable Long id) {
-		AssetDTO asset = assetService.updateAsset(assetDTO, id);
-		return asset;
-	}
-	
+
 	@DeleteMapping("/assets/{id}")
-	public void deleteAsset(@PathVariable Long id) {
+	@ApiOperation(value = "Delete Asset By ID", response = AssetDTO.class)
+	public void deleteAsset(
+			@ApiParam(value = "Requires ID of the Asset which you want to delete. Asset already assigned to other Employee cannot be deleted") @PathVariable Long id) {
 		assetService.deleteAsset(id);
 	}
-	
+
 }

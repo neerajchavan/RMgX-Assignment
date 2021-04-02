@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class Asset {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "asset_id")
 	private Long id;
 
